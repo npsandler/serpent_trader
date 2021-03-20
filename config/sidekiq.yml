@@ -3,3 +3,7 @@
   pricecheckworker:
     cron: '*/10 * * * *'   # Runs every 10 minutes
     class: PriceCheckWorker
+
+  statbotworker:
+    cron: 0 11 * * * #every morning at 11am
+    class: StatbotWorker
