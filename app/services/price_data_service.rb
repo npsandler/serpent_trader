@@ -3,7 +3,7 @@ class PriceDataService
 
     def initialize(coin)
         @coin = coin
-        @price_data = CoinbaseClient.new(coin).fetch_candles_last_15_min
+        @price_data = BinanceClient.new(coin).fetch_candles_last_15_min
     end
 
     def all
@@ -25,11 +25,12 @@ class PriceDataService
     attr_reader :price_data, :coin
 
      def high
-        # each candle entry: [ time, low, high, open, close, volume ]
-        @high ||= price_data.sort_by { |entry| entry[3] }.last[3]
+        # based on binance response: 
+        # https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#market-data-endpoints
+        @high ||= price_data.sort_by { |entry| entry[2] }.last[2]
     end
 
     def low
-        @low ||= price_data.sort_by { |entry| entry[2] }.first[2]
+        @low ||= price_data.sort_by { |entry| entry[3] }.first[3]
     end
 end

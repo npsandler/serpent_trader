@@ -6,9 +6,9 @@ class OrderService
 
     def create_order
         send_creation_start_sms
-        place_external_order
-        record_order
-        send_creation_success_sms 
+        # place_external_order
+        # record_order
+        # send_creation_success_sms 
     end
 
     private
@@ -51,7 +51,9 @@ class OrderService
     end
 
     def place_external_order
-        #todo implement
+        # todo implement
+        # fetch wallet size
+        # purchase 1%
     end
 
     def record_order

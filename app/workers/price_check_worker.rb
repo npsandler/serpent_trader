@@ -1,8 +1,7 @@
 class PriceCheckWorker
   include ::Sidekiq::Worker
-  #todo get other coins working
-  # COIN_CODES = ["BTC", "ETH", "LTC"]
-  COIN_CODES = ["BTC"]
+
+  COIN_CODES = ["BTC", "ETH", "LTC"]
 
   def perform
       COIN_CODES.each do |coin|

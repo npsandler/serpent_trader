@@ -1,4 +1,4 @@
-describe CoinbaseClient do
+describe BinanceClient do
     describe "#new" do
 
         before do
