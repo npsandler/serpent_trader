@@ -41,10 +41,11 @@ gem 'binding_of_caller'
 gem 'pry-rails'
 gem 'annotate'
 gem "therubyracer"
-gem "sidekick"
+gem "sidekiq"
 gem "rspec"
 gem "httparty"
 gem "twilio-ruby"
+gem 'binance-ruby'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
