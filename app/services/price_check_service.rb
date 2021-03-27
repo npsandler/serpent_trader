@@ -5,8 +5,7 @@ class PriceCheckService
 
     def execute
         price_data = PriceDataService.new(coin)
-        OrderService.new(coin, price_data.percent_change).create_order if true
-        # OrderService.new(coin, price_data.percent_change) if price_data.surging?
+        OrderService.new(coin, price_data.percent_change) if price_data.surging?
         # orders = Orders.open(coin)
         # OrderUpdater.new(orders, coin, high, low)
         # fetch data
