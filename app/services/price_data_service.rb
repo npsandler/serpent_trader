@@ -2,6 +2,7 @@ class PriceDataService
     CHANGE_THRESHOLD = 0.0275
 
     def initialize(coin)
+        puts "initializing PriceDataService"
         @coin = coin
         @price_data = BinanceClient.new(coin).fetch_candles_last_15_min
     end
@@ -17,6 +18,7 @@ class PriceDataService
 
     def surging?
         # verify this
+        puts "#surge check"
         percent_change > CHANGE_THRESHOLD
     end
 
