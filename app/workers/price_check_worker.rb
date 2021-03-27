@@ -1,6 +1,4 @@
 class PriceCheckWorker
-  include ::Sidekiq::Worker
-
   COIN_CODES = ["BTC", "ETH", "LTC"]
 
   def perform
