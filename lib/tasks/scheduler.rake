@@ -4,3 +4,9 @@ task :check_prices => :environment do
     PriceCheckWorker.new.perform
     puts "done."
 end
+
+task :statbot => :environment do
+    puts "Begining statbot"
+    Statbot::StatbotWorker.run
+    puts "done."
+end
