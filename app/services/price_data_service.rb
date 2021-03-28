@@ -1,5 +1,5 @@
 class PriceDataService
-    CHANGE_THRESHOLD = 0.02
+    CHANGE_THRESHOLD = 0.015
 
     def initialize(coin)
         @coin = coin
