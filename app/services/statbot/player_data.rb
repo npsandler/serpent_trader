@@ -48,7 +48,8 @@ module Statbot
                 "Total Kills: #{self.kills}",
                 "Assists: #{self.assists}",
                 "Average Damage: #{self.avg_damage}",
-                "Highest Damage: #{self.best_damage.to_i}"
+                "Highest Damage: #{self.best_damage.to_i}",
+                "Games Played: #{self.games_played.to_i}"
             ]
             
             entries << "Revives: #{self.revives}" if self.revives > 0
