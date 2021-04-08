@@ -1,7 +1,9 @@
 class OrderService
-    def initialize(coin, percent_change)
+    PHONE_NUMBER = Rails.application.credentials.phone_numbers[:sliptide12]
+
+    def initialize(coin, current_price)
         @coin = coin 
-        @percent_change = percent_change
+        @current_price = current_price 
     end
 
     def create_order
@@ -13,47 +15,32 @@ class OrderService
 
     private
 
-    attr_reader :coin, :percent_change
+    attr_reader :coin, :current_price
 
     def send_creation_start_sms
-        #todo move number to better place for constants
-        number = "+15188176077"
         messages = [
-            "#{coin} surged #{formatted_percent_change} in past 15 minutes.",
-            "Attempting to place order for #{formatted_purchase_amount}"
+            "Attempting to place order for #{coin}"
         ]
         message = messages.join("\n")
 
-        TwilioTextMessenger.new(message, number).send
+        TwilioTextMessenger.new(message, PHONE_NUMBER).send
     end
 
     #todo what params are worth texting here
     def send_creation_success_sms
-        #todo move number to better place for constants
-        number = "+15188176077"
         messages = [
             "Successully placed order for #BTC",
             "Details..."
         ]
         message = messages.join("\n")
 
-        TwilioTextMessenger.new(message, number).send
-    end
-
-    def formatted_percent_change
-        "#{(percent_change * 100).round(3)}%"
-    end
-
-    def formatted_purchase_amount
-        #todo replace
-        purchase_amount = 2000.to_f
-        "$#{purchase_amount / 100}"
+        TwilioTextMessenger.new(message, PHONE_NUMBER).send
     end
 
     def place_external_order
-        # todo implement
-        # fetch wallet size
-        # purchase 1%
+        dollar_amount = client.wallet_usd / 100
+        volume = (dollar_amount / current_price).round(4)
+        client.place_order(volume)      
     end
 
     def record_order
@@ -62,5 +49,9 @@ class OrderService
 
     def send_creation_success_sms
         #todo implement
+    end
+
+    def client 
+        @client ||= KrakenClient.new(coin)
     end
 end

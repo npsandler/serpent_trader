@@ -45,6 +45,7 @@ gem "rspec"
 gem "httparty"
 gem "twilio-ruby"
 gem 'binance-ruby'
+gem 'kraken_ruby_client', github: 'jonatack/kraken_ruby_client'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

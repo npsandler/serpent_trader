@@ -1,36 +1,23 @@
 class PriceDataService
-    CHANGE_THRESHOLD = 0.02
+    THRESHOLD = 0.01
 
     def initialize(coin)
-        @coin = coin
-        @price_data = BinanceClient.new(coin).fetch_candles_last_15_min
+        @price_data = KrakenClient.new(coin).fetch_candles_last_15_min
     end
 
-    def all
-        # todo remove : for testing only
-        price_data
+    def should_buy?
+        (vwap - close) / close > THRESHOLD
     end
 
-    def percent_change
-        (high.to_f - low.to_f) / low.to_f
-    end
-
-    def surging?
-        # verify this
-        percent_change > CHANGE_THRESHOLD
+    def close 
+        price_data[4].to_f
     end
 
     private
 
-    attr_reader :price_data, :coin
+    attr_reader :price_data, # :coin
 
-     def high
-        # based on binance response: 
-        # https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#market-data-endpoints
-        @high ||= price_data.sort_by { |entry| entry[2] }.last[2]
-    end
-
-    def low
-        @low ||= price_data.sort_by { |entry| entry[3] }.first[3]
+    def vwap 
+        price_data[5].to_f
     end
 end
