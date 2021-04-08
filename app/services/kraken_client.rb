@@ -43,8 +43,10 @@ class KrakenClient
         kclient.balance["result"]
     end
 
-    # private 
+    :coin
+    
+    private 
 
-    attr_reader :symbol, :kclient, :coin
+    attr_reader :symbol, :kclient
 end
 

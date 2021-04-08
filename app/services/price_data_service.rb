@@ -6,7 +6,7 @@ class PriceDataService
     end
 
     def should_buy?
-        puts "Should buy #{coin}?"
+        puts "Should buy #{price_data.coin}?"
         puts "calculated diff: "
         puts (vwap - close) / close
         (vwap - close) / close > THRESHOLD
