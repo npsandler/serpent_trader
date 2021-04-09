@@ -18,7 +18,6 @@ class KrakenClient
 
     def place_order(volume)
         pair = ASSET_PAIRS[coin]
-        binding.pry
         kclient.add_order(pair: pair, type: 'buy', ordertype: 'market', volume: volume)
     end
 
@@ -43,7 +42,7 @@ class KrakenClient
         kclient.balance["result"]
     end
 
-    :coin
+    attr_reader :coin
     
     private 
 
