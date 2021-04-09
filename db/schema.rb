@@ -12,14 +12,20 @@
 
 ActiveRecord::Schema.define(version: 2021_03_17_201434) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "orders", force: :cascade do |t|
     t.string "coin_type"
-    t.integer "cost_cents"
-    t.integer "coin_value"
-    t.integer "stop_price"
+    t.integer "purchase_price"
+    t.integer "coin_volume"
+    t.integer "take_profit"
+    t.integer "stop_loss"
     t.boolean "is_closed", default: false
     t.datetime "closed_date"
     t.string "external_order_id"
+    t.string "loss_limit_order_id"
+    t.string "take_profit_order_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

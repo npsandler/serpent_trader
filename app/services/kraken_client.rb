@@ -1,5 +1,4 @@
 class KrakenClient
-    CHANGE_THRESHOLD = 0.0275
     GRANULARITY = 900
     ASSET_PAIRS = {
         "BTC" => "XBTUSDT",
@@ -17,10 +16,29 @@ class KrakenClient
     end
 
     def place_order(volume)
-        pair = ASSET_PAIRS[coin]
-        kclient.add_order(pair: pair, type: 'buy', ordertype: 'market', volume: volume)
+        kclient.add_order(pair: pair, type: 'buy', ordertype: 'market', volume: volume)["result"]["txid"].first
     end
 
+    def set_stop_loss(price, volume)
+        # {"error"=>[], "result"=>{"descr"=>{"order"=>"sell 0.00030000 XBTUSDT @ stop loss 57857.9"}, "txid"=>["ODV2IJ-WXRUE-UU5QUS"]}}
+        kclient.add_order(
+            pair: pair,
+            type: 'sell',
+            ordertype: 'stop-loss',
+            price: price, 
+            volume: volume
+        )["result"]["txid"].first
+    end
+
+    def set_take_profit(price, volume)
+        kclient.add_order(
+            pair: pair,
+            type: 'sell',
+            ordertype: 'take-profit',
+            price: price, 
+            volume: volume
+        )["result"]["txid"].first
+    end
 
     def assets
         kclient.assets
@@ -42,9 +60,21 @@ class KrakenClient
         kclient.balance["result"]
     end
 
+    def open_order_ids
+        kclient.open_orders["result"]["open"].keys
+    end
+
+    def close_order(id)
+        kclient.cancel_order(id)
+    end
+
     attr_reader :coin
     
     private 
+
+    def pair 
+        ASSET_PAIRS[coin]
+    end
 
     attr_reader :symbol, :kclient
 end
