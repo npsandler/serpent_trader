@@ -2,11 +2,12 @@ class PriceDataService
     THRESHOLD = 0.005
 
     def initialize(coin)
+        @coin = coin
         @price_data = KrakenClient.new(coin).fetch_candles_last_15_min
     end
 
     def should_buy?
-        puts "Should buy #{price_data.coin}?"
+        puts "Should buy #{coin}?"
         puts "calculated diff: "
         puts (vwap - close) / close
         (vwap - close) / close > THRESHOLD
@@ -22,5 +23,5 @@ class PriceDataService
 
     private
 
-    attr_reader :price_data
+    attr_reader :price_data, :coin
 end
