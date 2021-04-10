@@ -7,6 +7,8 @@ class PriceDataService
     end
 
     def should_buy?
+        diff =  (vwap - close) / close 
+        puts "Ratio for #{coin}: #{diff}"
         (vwap - close) / close > THRESHOLD
     end
 
