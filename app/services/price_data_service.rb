@@ -9,7 +9,7 @@ class PriceDataService
     def should_buy?
         diff =  ((vwap - close) / close).round(4) 
         puts "Ratio for #{coin}: #{diff}"
-       diff > THRESHOLD
+        diff > THRESHOLD
     end
 
     def close 
