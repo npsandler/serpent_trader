@@ -3,7 +3,7 @@ class PriceDataService
 
     def initialize(coin)
         @coin = coin
-        @price_data = KrakenClient.new(coin).fetch_candles_last_15_min
+        @price_data = KrakenClient.new(coin).fetch_candles_last_60_min
     end
 
     def should_buy?

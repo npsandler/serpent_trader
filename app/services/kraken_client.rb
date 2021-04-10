@@ -44,11 +44,11 @@ class KrakenClient
         kclient.assets
     end
 
-    def fetch_candles_last_15_min
+    def fetch_candles_last_60_min
         kclient.ohlc(
             symbol,
-            interval: 15,
-            since: (Time.now - 15.minutes).to_i
+            interval: 60,
+            since: (Time.now - 60.minutes).to_i
         )["result"].values.first.flatten
     end
 
