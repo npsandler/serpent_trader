@@ -10,6 +10,12 @@ class OrderPruner
                 open_order_ids << o.loss_limit_order_id
                 open_order_ids << o.take_profit_order_id
             else
+                if !loss_limit_still_open && take_profit_still_open
+                    loss = (-1 * o.stop_loss)
+                    o.update_column(:profit, loss) 
+                elsif !take_profit_still_open && loss_limit_still_open
+                    o.update_column(:profit, o.take_profit) 
+                end
                 o.update_column(:is_closed, true) 
                 o.update_column(:closed_date, Time.now) 
                 o.save!
