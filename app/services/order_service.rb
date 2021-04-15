@@ -21,7 +21,7 @@ class OrderService
             place_stop_loss
             place_take_profit
             record_order
-            send_creation_success_sms 
+            # send_creation_success_sms 
         else 
             puts "Not purchasing #{coin}. No surge detected"
         end
