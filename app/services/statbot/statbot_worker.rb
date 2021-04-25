@@ -1,7 +1,7 @@
 module Statbot 
     class StatbotWorker
         class << self
-            PLAYERS = ["sliptide12", "teebascreeb", "Johnjohnb4", "VON STONKS", "StK MAVRICK"]
+            PLAYERS = ["sliptide12", "teebascreeb", "Johnjohnb4", "VON STONKS", "StK MAVRIK"]
 
             def run 
                 player_stats = []
@@ -17,6 +17,8 @@ module Statbot
             
             def send_texts(player_stats)
                 stats  = player_stats.sort { |pd| -(pd.kd_ratio) }
+                return if stats.all? { |pd| pd.games_played.zero? }
+
                 msg = "🦍 Statbot Report 🦍 \n \n"
                 mapped_stats =  stats.map { |pd| pd.formatted_for_sms }.compact.join("\n\n") 
                 puts mapped_stats
@@ -26,11 +28,6 @@ module Statbot
                 msg << "\n \n 🦍 End Report 🦍"
 
                 stats.each do |player_data|
-                    if player_data.games_played.zero?
-                        puts "not texting #{player_data.name}, didnt play"
-                        next
-                    end
-
                     next if phone_map(player_data.name).nil?
                     puts "sending text to #{player_data.name}"
                     TwilioTextMessenger.new(
@@ -46,7 +43,7 @@ module Statbot
                     teebascreeb:  Rails.application.credentials.phone_numbers[:teebascreeb],
                     johnjohnb4:  Rails.application.credentials.phone_numbers[:johnjohnb4],
                     vonstonks:  Rails.application.credentials.phone_numbers[:vonstonks],
-                    stkmavrick:  Rails.application.credentials.phone_numbers[:stkmavrick]
+                    stkmavrik:  Rails.application.credentials.phone_numbers[:stkmavrik]
                 }
 
                 map[name.downcase.gsub(/\s+/, "").to_sym]
