@@ -1,5 +1,7 @@
 module Statbot
     class PlayerData
+        attr_reader :name, :games_played
+
         def initialize(name)    
             @name = name
             @games_played = 0
@@ -15,78 +17,64 @@ module Statbot
             @team_kills = 0
             @splatters = 0
             @vehicle_destroys = 0
+            @best_finish = 101
         end
 
         def add_match_stats(stats)
-            # todo fix this self... bs
-            self.games_played += 1 
-            self.kills += stats["kills"]
-            self.knocks += stats["DBNOs"]
-            self.damage += stats["damageDealt"]
-            self.assists += stats["assists"]
-            self.best_damage = stats["damageDealt"] if stats["damageDealt"] > best_damage
-            self.deaths += 1 unless stats["deathType"] == "alive"
-            self.chicken_dinners +=1 if stats["winPlace"] == 1
-            self.longest_kill = stats["longestKill"] if stats["longestKill"] > longest_kill
-            self.revives += stats["revives"]
-            self.team_kills += stats["teamKills"]
-            self.splatters += stats["roadKills"]
-            self.vehicle_destroys += stats["vehicleDestroys"]
+            @games_played += 1 
+            @kills += stats["kills"]
+            @knocks += stats["DBNOs"]
+            @damage += stats["damageDealt"]
+            @assists += stats["assists"]
+            @best_damage = stats["damageDealt"] if stats["damageDealt"] > @best_damage
+            @deaths += 1 unless stats["deathType"] == "alive"
+            @chicken_dinners +=1 if stats["winPlace"] == 1
+            @best_finish = stats["winPlace"] if stats["winPlace"] < @best_finish
+            @longest_kill = stats["longestKill"] if stats["longestKill"] > @longest_kill
+            @revives += stats["revives"]
+            @team_kills += stats["teamKills"]
+            @splatters += stats["roadKills"]
+            @vehicle_destroys += stats["vehicleDestroys"]
         end
 
         def kd_ratio
-            return 0 if self.deaths.zero?
-            @kd ||= (self.kills.to_f / self.deaths.to_f).round(3)
+            return 0 if @deaths.zero?
+            @kd ||= (@kills.to_f / @deaths.to_f).round(3)
         end
 
         def formatted_for_sms
-            return nil if self.games_played.zero?
-            entries = ["#{self.name.upcase}"]
-            entries <<  "#{self.calc_dinners}" if self.chicken_dinners > 0
+            return nil if @games_played.zero?
+            entries = ["#{name.upcase}"]
+            entries <<  "#{calc_dinners}" if @chicken_dinners > 0
+            entries <<  "Best Finish: #{@best_finish}" if @chicken_dinners.zero?
             entries << [
-                "K/D: #{self.kd_ratio}",
-                "Total Kills: #{self.kills}",
-                "Assists: #{self.assists}",
-                "Average Damage: #{self.avg_damage}",
-                "Highest Damage: #{self.best_damage.to_i}",
-                "Games Played: #{self.games_played.to_i}"
+                "K/D: #{kd_ratio}",
+                "Total Kills: #{@kills}",
+                "Assists: #{@assists}",
+                "Average Damage: #{avg_damage}",
+                "Highest Damage: #{@best_damage.to_i}",
+                "Games Played: #{@games_played.to_i}"
             ]
             
-            entries << "Revives: #{self.revives}" if self.revives > 0
-            entries << "Longest Kill: #{self.longest_kill.to_i}" if self.longest_kill > 100
-            entries << "Team Kills: #{self.team_kills}" if self.team_kills > 0
-            entries << "Splatters: #{self.splatters}" if self.splatters > 0
-            entries << "Vehicle Destroys: #{self.vehicle_destroys}" if self.vehicle_destroys > 0
+            entries << "Revives: #{@revives}" if @revives > 0
+            entries << "Longest Kill: #{@longest_kill.to_i}" if @longest_kill > 100
+            entries << "Team Kills: #{@team_kills}" if @team_kills > 0
+            entries << "Splatters: #{@splatters}" if @splatters > 0
+            entries << "Vehicle Destroys: #{@vehicle_destroys}" if @vehicle_destroys > 0
             entries.join("\n")
         end
-
-        attr_reader :name
-        attr_accessor :games_played
 
         private 
         
         def calc_dinners
             res = ""
-            self.chicken_dinners.times { res << "🍗 " }
+            @chicken_dinners.times { res << "🍗 " }
             res
         end
 
         def avg_damage
-            return 0 if self.games_played.zero?
-            @avg ||= (self.damage / self.games_played).to_i
+            return 0 if @games_played.zero?
+            @avg ||= (@damage / @games_played).to_i
         end
-    
-        attr_accessor :kills,
-            :knocks,
-            :assists,
-            :damage,
-            :best_damage,
-            :deaths,
-            :chicken_dinners,
-            :longest_kill,
-            :revives,
-            :team_kills,
-            :splatters,
-            :vehicle_destroys
     end
 end
