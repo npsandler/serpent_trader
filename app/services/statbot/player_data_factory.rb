@@ -1,7 +1,8 @@
 module Statbot
     class PlayerDataFactory
-        def initialize(name)
+        def initialize(name, game_mode)
             @player_name = name
+            @game_mode = game_mode
             @player_data = Statbot::PlayerData.new(name)
         end
 
@@ -15,11 +16,14 @@ module Statbot
 
         private
 
-        attr_reader :player_name, :player_data
+        attr_reader :player_name, :player_data, :game_mode
 
         def get_match_ids
             player_param = "players?filter[playerNames]=#{player_name}"
-            response = get("#{base_url}#{shard}#{player_param}")
+            response = Rails.cache.fetch("#{player_name}", expires_in: 2.hours) do
+                puts("fetching stats for #{player_name}, should only trigger once")
+                get("#{base_url}#{shard}#{player_param}")
+            end
             if response["data"].nil?
                 puts "ERROR -- no response from server fetching for #{player_name}" 
                 return
@@ -38,8 +42,13 @@ module Statbot
         end
 
         def match_stats(id)
-            match = get("#{base_url}#{shard}matches/#{id}")
+            match = Rails.cache.fetch("#{id}", expires_in: 2.hours) do
+                puts("fetching stats for game id: #{id}")
+                get("#{base_url}#{shard}matches/#{id}")
+            end
+
             return unless within_time_window(match)
+            return unless correct_game_mode(match)
             match = match["included"].select { |i| i["type"] == "participant"}.filter do |p|
                 player_name == (p["attributes"]["stats"]["name"])
             end
@@ -51,6 +60,10 @@ module Statbot
             # 11am by heroku time
             window_start = (Time.now.change(hour: 16) - 1.day).to_datetime 
             match_start > window_start
+        end
+
+        def correct_game_mode(m)
+            m["data"]["attributes"]["gameMode"] == game_mode
         end
 
         def get(request_path="")
