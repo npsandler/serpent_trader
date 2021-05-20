@@ -29,7 +29,7 @@ module Statbot
                 return
             end
             matches = response["data"].first["relationships"]["matches"]["data"]
-            puts "Fetched #{matches.count} total matches for #{player_name}"
+            puts "Fetched #{matches.count} total matches for #{player_name} (#{game_mode})"
             matches.map { |match| match["id"] }.uniq
         end
 

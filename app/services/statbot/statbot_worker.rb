@@ -5,6 +5,9 @@ module Statbot
             GAME_MODES = ["solo", "duo", "squad"]
 
             def run 
+                msg = "🦍 Statbot Report 🦍 \n \n"
+                any_games_played = false
+
                 GAME_MODES.each do |game_mode|
                     player_stats = []
 
@@ -12,30 +15,28 @@ module Statbot
                         player_stats.push(Statbot::PlayerDataFactory.new(player, game_mode).generate)
                     end
 
-                    send_texts(player_stats, game_mode)
-                end                
+                    next if player_stats.all? { |pd| pd.games_played.zero? }
+                
+                    games_played = true 
+
+                    msg << "🦍🦍  #{game_mode.capitalize()}s 🦍🦍 \n \n"
+                    mapped_stats =  player_stats.map { |pd| pd.formatted_for_sms }.compact.join("\n\n") 
+                    msg << mapped_stats
+                    msg << "\n \n"
+                end    
+                
+                msg << "🦍🦍🦍🦍"
+                send_texts(msg) if any_games_played
             end
 
             private 
             
-            def send_texts(player_stats, game_mode)
-                stats  = player_stats.sort { |pd| -(pd.kd_ratio) }
-                return if stats.all? { |pd| pd.games_played.zero? }
-
-                msg = "🦍 Statbot Report 🦍 \n"
-                msg << "🦍  #{game_mode.capitalize()}s 🦍 \n \n"
-                mapped_stats =  stats.map { |pd| pd.formatted_for_sms }.compact.join("\n\n") 
-                return if mapped_stats.nil?
-                
-                msg << mapped_stats
-                msg << "\n \n 🦍🦍"
-
-                stats.each do |player_data|
-                    next if phone_map(player_data.name).nil?
-                    puts "sending text to #{player_data.name}"
+            def send_texts(msg)
+                PLAYERS.each do |name|
+                    puts "sending text to #{name}"
                     TwilioTextMessenger.new(
                         msg, 
-                        phone_map(player_data.name)
+                        phone_map(name)
                     ).send
                 end
             end
