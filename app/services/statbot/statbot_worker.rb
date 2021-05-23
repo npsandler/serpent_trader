@@ -16,15 +16,15 @@ module Statbot
                     end
 
                     next if player_stats.all? { |pd| pd.games_played.zero? }
-                
-                    games_played = true 
+
+                    any_games_played = true 
 
                     msg << "🦍🦍  #{game_mode.capitalize()}s 🦍🦍 \n \n"
                     mapped_stats =  player_stats.map { |pd| pd.formatted_for_sms }.compact.join("\n\n") 
                     msg << mapped_stats
                     msg << "\n \n"
                 end    
-                
+
                 msg << "🦍🦍🦍🦍"
                 send_texts(msg) if any_games_played
             end
