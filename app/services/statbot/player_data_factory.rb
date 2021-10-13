@@ -55,7 +55,8 @@ module Statbot
         end 
 
         def within_time_window(m)
-            return false if m.nil?
+            return false if m.nil? || m["errors"].present?
+
             match_start = DateTime.parse(m["data"]["attributes"]["createdAt"])
             # 11am by heroku time
             window_start = (Time.now.change(hour: 16) - 1.day).to_datetime 
