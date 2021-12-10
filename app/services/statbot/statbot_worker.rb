@@ -1,7 +1,7 @@
 module Statbot 
     class StatbotWorker
         class << self
-            PLAYERS = ["sliptide12", "teebascreeb", "Johnjohnb4", "VON STONKS", "StK MAVRIK"]
+            PLAYERS = ["sliptide12", "teebascreeb", "Johnjohnb4", "BEST FAQ", "StK MAVRIK"]
             GAME_MODES = ["solo", "duo", "squad"]
 
             def run 
@@ -46,7 +46,7 @@ module Statbot
                     sliptide12:  Rails.application.credentials.phone_numbers[:sliptide12],
                     teebascreeb:  Rails.application.credentials.phone_numbers[:teebascreeb],
                     johnjohnb4:  Rails.application.credentials.phone_numbers[:johnjohnb4],
-                    vonstonks:  Rails.application.credentials.phone_numbers[:vonstonks],
+                    bestfaq:  Rails.application.credentials.phone_numbers[:bestfaq],
                     stkmavrik:  Rails.application.credentials.phone_numbers[:stkmavrik]
                 }
 
