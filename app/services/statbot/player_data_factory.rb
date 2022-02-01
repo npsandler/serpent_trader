@@ -49,9 +49,15 @@ module Statbot
 
             return unless within_time_window(match)
             return unless correct_game_mode(match)
+
+            matchType = get_match_type(match)
+
             match = match["included"].select { |i| i["type"] == "participant"}.filter do |p|
                 player_name == (p["attributes"]["stats"]["name"])
             end
+
+            # append matchType for use by add_match_stats
+            match["matchType"] = matchType
         end 
 
         def within_time_window(m)
@@ -65,6 +71,10 @@ module Statbot
 
         def correct_game_mode(m)
             m["data"]["attributes"]["gameMode"] == game_mode
+        end
+
+        def get_match_type(m) 
+            m["data"]["attributes"]["matchType"]
         end
 
         def get(request_path="")
