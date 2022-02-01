@@ -57,7 +57,8 @@ module Statbot
             end
 
             # append matchType for use by add_match_stats
-            match["matchType"] = matchType
+            match.first["matchType"] = matchType
+            match
         end 
 
         def within_time_window(m)

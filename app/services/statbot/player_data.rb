@@ -52,11 +52,17 @@ module Statbot
             @kd ||= (@kills.to_f / @deaths.to_f).round(3)
         end
 
+        def any_din_dins?
+            @casual_chicken_dinners > 0 ||
+                @unranked_chicken_dinners > 0 || 
+                @ranked_chicken_dinners > 0
+        end
+
         def formatted_for_sms
             return nil if @games_played.zero?
             entries = ["#{name.upcase}"]
-            entries <<  "#{calc_dinners}" if @chicken_dinners > 0
-            entries <<  "Best Finish: #{@best_finish}" if @chicken_dinners.zero?
+            entries <<  "#{calc_dinners}" if any_din_dins?
+            entries <<  "Best Finish: #{@best_finish}" if !any_din_dins?
             entries << [
                 "K/D: #{kd_ratio}",
                 "Total Kills: #{@kills}",
