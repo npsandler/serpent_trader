@@ -39,8 +39,8 @@ module Statbot
 
             # locally scope matchType for conditionals
             matchType = stats["matchType"]
-            # casual - 'airoyal'
-            @casual_chicken_dinners += 1 if stats["winPlace"] == 1 && matchType == "airoyal"
+            # casual - 'airoyale'
+            @casual_chicken_dinners += 1 if stats["winPlace"] == 1 && matchType == "airoyale"
             # unranked - 'official'
             @unranked_chicken_dinners += 1 if stats["winPlace"] == 1 && matchType == "official"
             # ranked - 'competitive'
