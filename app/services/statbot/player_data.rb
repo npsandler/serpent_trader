@@ -11,7 +11,9 @@ module Statbot
             @damage = 0 
             @best_damage = 0
             @deaths = 0 
-            @chicken_dinners = 0
+            @casual_chicken_dinners = 0
+            @unranked_chicken_dinners = 0
+            @ranked_chicken_dinners = 0
             @longest_kill = 0
             @revives = 0
             @team_kills = 0
@@ -28,13 +30,21 @@ module Statbot
             @assists += stats["assists"]
             @best_damage = stats["damageDealt"] if stats["damageDealt"] > @best_damage
             @deaths += 1 unless stats["deathType"] == "alive"
-            @chicken_dinners +=1 if stats["winPlace"] == 1
             @best_finish = stats["winPlace"] if stats["winPlace"] < @best_finish
             @longest_kill = stats["longestKill"] if stats["longestKill"] > @longest_kill
             @revives += stats["revives"]
             @team_kills += stats["teamKills"]
             @splatters += stats["roadKills"]
             @vehicle_destroys += stats["vehicleDestroys"]
+
+            # locally scope matchType for conditionals
+            matchType = stats["matchType"]
+            # casual - 'airoyal'
+            @casual_chicken_dinners += 1 if stats["winPlace"] == 1 && matchType == "airoyal"
+            # unranked - 'official'
+            @unranked_chicken_dinners += 1 if stats["winPlace"] == 1 && matchType == "official"
+            # ranked - 'competitive'
+            @ranked_chicken_dinners += 1 if stats["winPlace"] == 1 && matchType == "competitive"
         end
 
         def kd_ratio
@@ -68,7 +78,9 @@ module Statbot
         
         def calc_dinners
             res = ""
-            @chicken_dinners.times { res << "🍗 " }
+            @casual_chicken_dinners.times { res << "🦾 " }
+            @unranked_chicken_dinners.times { res << "🍗 " }
+            @ranked_chicken_dinners.times { res << "🏆 " }
             res
         end
 
