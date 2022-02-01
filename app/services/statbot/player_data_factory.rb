@@ -90,6 +90,7 @@ module Statbot
         def add_stats(match)
             match.each do |player| 
                 stats =  player["attributes"]["stats"]
+                stats["matchType"] = player["matchType"]
                 player_data.add_match_stats(stats)
             end
         end

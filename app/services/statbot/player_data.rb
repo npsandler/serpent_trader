@@ -38,13 +38,14 @@ module Statbot
             @vehicle_destroys += stats["vehicleDestroys"]
 
             # locally scope matchType for conditionals
-            matchType = stats["matchType"]
+            match_type = stats["matchType"]
+            
             # casual - 'airoyale'
-            @casual_chicken_dinners += 1 if stats["winPlace"] == 1 && matchType == "airoyale"
+            @casual_chicken_dinners += 1 if stats["winPlace"] == 1 && match_type == "airoyale"
             # unranked - 'official'
-            @unranked_chicken_dinners += 1 if stats["winPlace"] == 1 && matchType == "official"
+            @unranked_chicken_dinners += 1 if stats["winPlace"] == 1 && match_type == "official"
             # ranked - 'competitive'
-            @ranked_chicken_dinners += 1 if stats["winPlace"] == 1 && matchType == "competitive"
+            @ranked_chicken_dinners += 1 if stats["winPlace"] == 1 && match_type == "competitive"
         end
 
         def kd_ratio
